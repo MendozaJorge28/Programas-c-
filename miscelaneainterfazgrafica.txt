@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 
+alumnos_registrados = []
+
 def saludo():
     reinicio()
     tk.Label(area_dinamica, text="Hola", font=("Arial", 14)).pack(pady=10)
@@ -16,28 +18,37 @@ def datos_alumnos():
     campo_texto_uno.pack(pady=5)
 
     tk.Label(area_dinamica, text="Elige una opcion de genero:").pack()
-    opcion_elegida = tk.StringVar(value="femenino")
-    tk.Radiobutton(area_dinamica, text="hombre", variable=opcion_elegida, value="hombre").pack()
-    tk.Radiobutton(area_dinamica, text="mujer", variable=opcion_elegida, value="mujer").pack()
+    opcion_elegida = tk.StringVar(value="Masculino")
+    tk.Radiobutton(area_dinamica, text="Hombre", variable=opcion_elegida, value="Hombre").pack()
+    tk.Radiobutton(area_dinamica, text="Mujer", variable=opcion_elegida, value="Mujer").pack()
 
     tk.Label(area_dinamica, text="grupo:").pack()
-    combo = ttk.Combobox(area_dinamica, values=["2BMPG" ,"2AMPG" ])
+    combo = ttk.Combobox(area_dinamica, values=["2AMPG", "2BMPG" ])
     combo.pack()
     combo.current(0)
 
+    lista_alumnos = tk.Listbox(area_dinamica, width=50)
+    lista_alumnos.pack(pady=10)
+
     def guardar_opciones():
         valor = campo_texto_uno.get()
-        messagebox.showinfo("Revisión", f"Alumno: {valor}\nGenero: {opcion_elegida.get()}\nGrupo: {combo.get()}")
+        genero = opcion_elegida.get()
+        semestre = combo.get()
+        datos = f"{valor} - {genero} - {semestre}"
+        alumnos_registrados.append(datos)
+        lista_alumnos.delete(0, tk.END)
+        for alumno in alumnos_registrados:
+            lista_alumnos.insert(tk.END, alumno)
+            messagebox.showinfo("Revisión", f"Alumno: {valor}\nGenero: {genero}\nSemestre: {semestre}")
 
-    tk.Button(area_dinamica, text="mostrar datos", command=guardar_opciones).pack(pady=10)
+    tk.Button(area_dinamica, text="Mostar alumnos", command=guardar_opciones).pack(pady=10)
 
 def color():
     reinicio()
-    tk.Label(area_dinamica, text="Configuraciones de estetica", font=("Arial", 14)).pack(pady=10)
+    tk.Label(area_dinamica, text="Configuraciones de color", font=("Arial", 14)).pack(pady=10)
 
     colores = ["lightblue", "lightgreen", "lightyellow", "lightgray"]
     tk.Label(area_dinamica, text="Cambiar fondo:").pack()
-
     def cambiar_color(c):
         ventana_principal.config(bg=c)
         menu_lateral.config(bg=c)
@@ -50,12 +61,12 @@ def preguntas():
     reinicio()
     tk.Label(area_dinamica, text="Texto de ayuda que el alumno debe mejorar", font=("Arial", 14)).pack(pady=10)
     contenido = (
-        "Explica con tus palabras:\n\n"
-        "- ¿Qué hace cada botón?\n"
-        "- ¿Qué cambias si modificas un texto?\n"
-        "- ¿Cómo cambias un color?\n"
-        "- ¿Qué debes renombrar?"
-    )
+    "Explica con tus palabras:\n\n"
+    "- ¿Qué hace cada botón?\n"
+    "- ¿Qué cambias si modificas un texto?\n"
+    "- ¿Cómo cambias un color?\n"
+    "- ¿Qué debes renombrar?"
+)
     tk.Label(area_dinamica, text=contenido, justify="left").pack(pady=10)
 
 def reinicio():
@@ -75,7 +86,7 @@ area_dinamica.pack(side="right", expand=True, fill="both")
 
 tk.Button(menu_lateral, text="Inicio", command=saludo, width=15).pack(pady=10)
 tk.Button(menu_lateral, text="Datos del alumno", command=datos_alumnos, width=15).pack(pady=10)
-tk.Button(menu_lateral, text="colores", command=color, width=15).pack(pady=10)
+tk.Button(menu_lateral, text="color", command=color, width=15).pack(pady=10)
 tk.Button(menu_lateral, text="preguntas", command=preguntas, width=15).pack(pady=10)
 tk.Button(menu_lateral, text="Salir", command=ventana_principal.destroy, width=15).pack(pady=30)
 
